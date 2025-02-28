@@ -1,0 +1,243 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif;
+  margin: auto;
+  max-width: 800px;
+  padding: 2rem;
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
+.container {
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.input-group {
+  margin-bottom: 20px;
+  margin-right: 20px;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #383838;
+  border-radius: 4px;
+  font-size: 16px;
+  background-color: #242424;
+  color: #e0e0e0;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: #2196F3;
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.25);
+}
+
+.options {
+  margin-bottom: 20px;
+  display: flex;
+  gap: 20px;
+}
+
+.quality-selection {
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.quality-selection label {
+  font-weight: bold;
+  color: #e0e0e0;
+}
+
+.quality-selection select {
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #383838;
+  background-color: #242424;
+  color: #e0e0e0;
+  font-size: 14px;
+  min-width: 200px;
+}
+
+.quality-selection select:focus {
+  outline: none;
+  border-color: #2196F3;
+}
+
+label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #e0e0e0;
+}
+
+input[type="checkbox"] {
+  accent-color: #2196F3;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+button {
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #0b7dda;
+}
+
+button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.5);
+}
+
+#stopBtn {
+  background-color: #f44336;
+}
+
+#stopBtn:hover {
+  background-color: #d32f2f;
+}
+
+#stopBtn:disabled {
+  background-color: #555555;
+  cursor: not-allowed;
+}
+
+.status {
+  margin-top: 20px;
+  border-top: 1px solid #333;
+  padding-top: 20px;
+}
+
+.status h3 {
+  color: #e0e0e0;
+}
+
+#status {
+  color: #e0e0e0;
+}
+
+.output {
+  background-color: #242424;
+  border: 1px solid #383838;
+  border-radius: 4px;
+  padding: 10px;
+  margin-top: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+  font-family: monospace;
+  white-space: pre-wrap;
+  color: #cccccc;
+}
+
+.save-path {
+  margin: 10px 0;
+  padding: 8px;
+  background-color: #1b3a2a;
+  border-left: 4px solid #388e3c;
+  font-family: monospace;
+  display: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  color: #b9f6ca;
+}
+
+.save-path:hover {
+  background-color: #214832;
+}
+
+.save-path:active {
+  background-color: #2a593f;
+}
+
+.save-path::before {
+  content: "📂 ";
+}
+
+/* Confirmation dialog */
+.confirm-dialog {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.confirm-dialog-content {
+  background-color: #2d2d2d;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  max-width: 450px;
+  width: 90%;
+  color: #e0e0e0;
+}
+
+.confirm-dialog-content h3 {
+  margin-top: 0;
+  color: #e0e0e0;
+}
+
+.confirm-dialog-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.confirm-yes {
+  background-color: #f44336;
+}
+
+.confirm-yes:hover {
+  background-color: #d32f2f;
+}
+
+.confirm-no {
+  background-color: #616161;
+}
+
+.confirm-no:hover {
+  background-color: #424242;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.app-logo {
+  height: 50px;
+  width: auto;
+}
+
+/* Adjust heading alignment to work with logo */
+h1 {
+  text-align: center;
+  color: #2196F3;
+  margin: 0;
+}

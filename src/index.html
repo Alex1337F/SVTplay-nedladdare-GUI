@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>SVT Play Downloader</title>
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <h1>SVT Play Downloader</h1>
+    <div class="container">
+      <div class="input-group">
+        <input 
+          type="text" 
+          id="videoUrl" 
+          placeholder="Klistra in (ctrl + V) länken till videon du vill ladda ner här (t.ex. https://www.svtplay.se/...)" 
+        />
+      </div>
+      
+      <div class="options">
+        <label>
+          <input type="checkbox" id="subtitles" />
+          Inkludera undertexter (om tillgängligt)
+        </label>
+        <label>
+          <input type="checkbox" id="wholeSeries" />
+          Ladda ner alla avsnitt i serien (om tillgängligt)
+        </label>
+      </div>
+
+      <!-- Add this quality selection dropdown -->
+      <div class="quality-selection">
+        <label for="quality">Video upplösning:</label>
+        <select id="quality">
+          <option value="default">Högsta upplösning tillgängligt</option>
+          <option value="2160">3840x2160 (4K)</option>
+          <option value="1440">2560x1440 (2K)</option>
+          <option value="1080">1920x1080 (Full HD)</option>
+          <option value="720">1280x720 (HD)</option>
+          <option value="360">640x360</option>
+          <option value="234">416x234</option>
+        </select>
+      </div>
+      
+      <div class="button-group">
+        <button id="downloadBtn">Ladda ner</button>
+        <button id="stopBtn" disabled>Stopp</button>
+      </div>
+      
+      <div class="status">
+        <h3>Status:</h3>
+        <div id="status">Redo</div>
+        <div id="savePath" class="save-path"></div>
+        <div id="output" class="output"></div>
+      </div>
+      
+      <!-- Confirmation Dialog (hidden by default) -->
+      <div id="confirmDialog" class="confirm-dialog">
+        <div class="confirm-dialog-content">
+          <h3>Filen existerar redan</h3>
+          <p>En fil med det här namnet existerar redan. Vill du skriva över den?</p>
+          <div class="confirm-dialog-buttons">
+            <button id="confirmYesBtn" class="confirm-yes">Ja, skriv över</button>
+            <button id="confirmNoBtn" class="confirm-no">Nej, avbryt</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add this after the existing confirmation dialog -->
+      <div id="resolutionErrorDialog" class="confirm-dialog">
+        <div class="confirm-dialog-content">
+          <h3>Upplösning inte tillgängligt</h3>
+          <p>Den valda upplösningen finns inte tillgänglig för denna video. Vill du testa ladda ner med den högsta upplösningen som finns tillgänglig?</p>
+          <div class="confirm-dialog-buttons">
+            <button id="tryHighestQualityBtn" class="confirm-yes">Ja</button>
+            <button id="cancelDownloadBtn" class="confirm-no">Nej, avbryt</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+    // Add this before your DOMContentLoaded event
+    console.log('Script running, checking API availability:', !!window.api);
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('DOM loaded, API available:', !!window.api);
+      console.log('API methods:', window.api ? Object.keys(window.api) : 'none');
+      
+      // Make sure window.api is available before using it
+      if (!window.api) {
+        console.error('API not available. Check preload script.');
+        return;
+      }
+
+      // Make sure dialogs are hidden by default
+      const confirmDialog = document.getElementById('confirmDialog');
+      confirmDialog.style.display = 'none';
+      const resolutionErrorDialog = document.getElementById('resolutionErrorDialog');
+      resolutionErrorDialog.style.display = 'none';
+
+      const videoUrlInput = document.getElementById('videoUrl');
+      const subtitlesCheckbox = document.getElementById('subtitles');
+      const wholeSeriesCheckbox = document.getElementById('wholeSeries');
+      const qualitySelect = document.getElementById('quality');
+      const downloadBtn = document.getElementById('downloadBtn');
+      const stopBtn = document.getElementById('stopBtn');
+      const statusEl = document.getElementById('status');
+      const savePathEl = document.getElementById('savePath');
+      const outputEl = document.getElementById('output');
+      const confirmYesBtn = document.getElementById('confirmYesBtn');
+      const confirmNoBtn = document.getElementById('confirmNoBtn');
+      const tryHighestQualityBtn = document.getElementById('tryHighestQualityBtn');
+      const cancelDownloadBtn = document.getElementById('cancelDownloadBtn');
+
+      // Handle download button click
+      downloadBtn.addEventListener('click', async () => {
+        const url = videoUrlInput.value.trim();
+        
+        if (!url) {
+          statusEl.textContent = 'Please enter a video URL';
+          statusEl.style.color = 'red';
+          return;
+        }
+        
+        // Get options
+        const options = {
+          subtitles: subtitlesCheckbox.checked,
+          wholeSeries: wholeSeriesCheckbox.checked,
+          quality: qualitySelect.value // Add the selected quality
+        };
+        
+        // Update UI
+        statusEl.textContent = 'Downloading...';
+        statusEl.style.color = '#2196F3';
+        savePathEl.textContent = '';
+        savePathEl.style.display = 'none';
+        downloadBtn.disabled = true;
+        stopBtn.disabled = false;
+        outputEl.textContent = '';
+        confirmDialog.style.display = 'none';
+        
+        try {
+          // Start download
+          window.api.downloadVideo(url, options);
+        } catch (error) {
+          console.error('Download error:', error);
+          statusEl.textContent = `Error: ${error.message}`;
+          statusEl.style.color = 'red';
+          downloadBtn.disabled = false;
+          stopBtn.disabled = true;
+        }
+      });
+      
+      // Handle stop button click
+      stopBtn.addEventListener('click', () => {
+        window.api.stopDownload();
+        statusEl.textContent = 'Download stopped by user';
+        statusEl.style.color = 'orange';
+        downloadBtn.disabled = false;
+        stopBtn.disabled = true;
+      });
+      
+      // Handle confirmation dialog yes button click
+      confirmYesBtn.addEventListener('click', async () => {
+        confirmDialog.style.display = 'none';
+        statusEl.textContent = 'Downloading (overwriting)...';
+        statusEl.style.color = '#2196F3';
+        outputEl.textContent = '';
+        stopBtn.disabled = false;
+        
+        try {
+          // Force download with overwrite option (preserve quality setting)
+          window.api.forceDownload();
+        } catch (error) {
+          statusEl.textContent = `Error: ${error.message}`;
+          statusEl.style.color = 'red';
+          downloadBtn.disabled = false;
+          stopBtn.disabled = true;
+        }
+      });
+      
+      // Handle confirmation dialog no button click
+      confirmNoBtn.addEventListener('click', () => {
+        confirmDialog.style.display = 'none';
+        statusEl.textContent = 'Download cancelled - file already exists';
+        statusEl.style.color = 'orange';
+        downloadBtn.disabled = false;
+        stopBtn.disabled = true;
+      });
+
+      // Handle resolution error dialog buttons
+      tryHighestQualityBtn.addEventListener('click', async () => {
+        resolutionErrorDialog.style.display = 'none';
+        statusEl.textContent = 'Downloading with highest quality...';
+        statusEl.style.color = '#2196F3';
+        outputEl.textContent = '';
+        stopBtn.disabled = false;
+        
+        try {
+          // Retry download with highest quality setting
+          window.api.retryWithHighestQuality();
+        } catch (error) {
+          statusEl.textContent = `Error: ${error.message}`;
+          statusEl.style.color = 'red';
+          downloadBtn.disabled = false;
+          stopBtn.disabled = true;
+        }
+      });
+
+      cancelDownloadBtn.addEventListener('click', () => {
+        resolutionErrorDialog.style.display = 'none';
+        statusEl.textContent = 'Download cancelled - requested resolution not available';
+        statusEl.style.color = 'orange';
+        downloadBtn.disabled = false;
+        stopBtn.disabled = true;
+      });
+
+      // Listen for progress updates
+      window.api.onProgress((data) => {
+        if (data.type === 'output' || data.type === 'error') {
+          // Append to output
+          outputEl.textContent += data.data;
+          // Scroll to bottom
+          outputEl.scrollTop = outputEl.scrollHeight;
+        } else if (data.type === 'complete') {
+          // Download completed
+          statusEl.textContent = data.success ? 'Download completed successfully!' : 'Download failed';
+          statusEl.style.color = data.success ? 'green' : 'red';
+          
+          // Show save path if available and make it clickable
+          if (data.success && data.savePath) {
+            savePathEl.textContent = `Files saved to: ${data.savePath}`;
+            savePathEl.style.display = 'block';
+            
+            // Store the path as a data attribute for click handling
+            savePathEl.setAttribute('data-path', data.savePath);
+            
+            // Add click event if not already added
+            if (!savePathEl.hasClickListener) {
+              savePathEl.addEventListener('click', () => {
+                const path = savePathEl.getAttribute('data-path');
+                if (path) {
+                  window.api.openFolder(path);
+                }
+              });
+              savePathEl.hasClickListener = true;
+            }
+          }
+          
+          downloadBtn.disabled = false;
+          stopBtn.disabled = true;
+        } else if (data.type === 'stopped') {
+          // Download stopped
+          outputEl.textContent += '\nDownload process terminated by user.';
+        } else if (data.type === 'file-exists') {
+          // File already exists, show confirmation dialog
+          confirmDialog.style.display = 'flex';
+          stopBtn.disabled = true;
+        } else if (data.type === 'resolution-error') {
+          // Resolution not available, show resolution error dialog
+          resolutionErrorDialog.style.display = 'flex';
+          stopBtn.disabled = true;
+        }
+      });
+    });
+  </script>
+</html>
