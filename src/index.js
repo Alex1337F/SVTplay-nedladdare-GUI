@@ -19,6 +19,7 @@ const createWindow = () => {
     width: 900,
     height: 750,
     resizable: false,
+    show: false, // Hide window until ready
     icon: path.join(__dirname, 'assets', 'icon.png'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -42,6 +43,11 @@ const createWindow = () => {
 
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
+
+  // Show window when ready to render
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show();
+  });
 
   // Open the DevTools in development
   if (process.env.NODE_ENV === 'development') {
