@@ -13,4 +13,4 @@
 - Stöd för undertexter
 - Stöd för att ladda ner hela serier på en gång
 - Möjlighet att välja upplösning innan nedladdning
-- Nedladdade filer hamnar i din dators "videor" mapp.
+- Möjlighet att välja mapp videorna hamnar i
