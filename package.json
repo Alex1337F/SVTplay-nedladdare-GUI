@@ -1,8 +1,8 @@
 {
   "name": "svtplaydl",
   "productName": "svtplaydl",
-  "version": "1.0.0",
-  "description": "My Electron application description",
+  "version": "1.0.1",
+  "description": "GUI for svtplay-dl",
   "main": "src/index.js",
   "scripts": {
     "start": "electron-forge start",
