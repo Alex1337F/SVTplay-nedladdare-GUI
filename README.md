@@ -2,9 +2,10 @@
  Ett grafiskt program till https://svtplay-dl.se.
  Programmet är baserat på och inkluderar [svtplay-dl](https://github.com/spaam/svtplay-dl) för att ladda ner strömmar. 
 
-### Klicka [här](https://github.com/Alex1337F/SVTplay-nedladdare-GUI/releases/download/Release/svtplaydl-1.0.0.exe) för att ladda ner
+### Klicka [här](https://github.com/Alex1337F/SVTplay-nedladdare-GUI/releases/download/Release/svtplaydl-1.0.1.exe) för att ladda ner
 
- ![{3E538428-BF0F-4131-9554-FF4AC7C64922}](https://github.com/user-attachments/assets/f690e811-af0d-4b96-8897-9e13dfecec54)
+![{F9734198-B28E-4BF7-B7B4-DBC344410FB3}](https://github.com/user-attachments/assets/46c2212f-77f6-4785-93ee-97d2692be2d6)
+
 
 
 ### Funktioner
