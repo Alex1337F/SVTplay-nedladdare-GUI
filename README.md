@@ -4,9 +4,7 @@
 
 ### Klicka [här](https://github.com/Alex1337F/SVTplay-nedladdare-GUI/releases/download/Release/svtplaydl-1.0.1.exe) för att ladda ner
 
-![{F9734198-B28E-4BF7-B7B4-DBC344410FB3}](https://github.com/user-attachments/assets/46c2212f-77f6-4785-93ee-97d2692be2d6)
-
-
+![image](https://github.com/user-attachments/assets/cd24466f-9cc4-4229-ae73-daeaaea993fa)
 
 ### Funktioner
 - **Enkelt och användarvänligt gränssnitt**
