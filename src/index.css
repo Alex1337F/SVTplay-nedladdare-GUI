@@ -69,6 +69,35 @@ input[type="text"]:focus {
   border-color: #2196F3;
 }
 
+/* Add after the .quality-selection styles and before the label styles */
+.save-location {
+  margin-bottom: 25px;
+}
+
+.save-location label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #e0e0e0;
+}
+
+.save-path-container {
+  display: flex;
+  gap: 10px;
+}
+
+.save-path-container input[type="text"] {
+  flex: 1;
+  background-color: #242424;
+  color: #e0e0e0;
+  cursor: default;
+}
+
+#browseFolderBtn {
+  padding: 8px 12px;
+  font-size: 14px;
+}
+
 label {
   display: flex;
   align-items: center;

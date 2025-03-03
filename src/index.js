@@ -60,7 +60,11 @@ const createWindow = () => {
     lastUrl = url;
     lastOptions = { ...options };
     
-    return startDownload(mainWindow, url, options);
+    // Add the savePath to your svtplay-dl command line arguments
+    const savePath = options.savePath || path.join(os.homedir(), 'Downloads');
+    lastOptions.savePath = savePath;
+    
+    return startDownload(mainWindow, url, lastOptions);
   });
   
   // Handle force download request (after user confirmation)
@@ -104,6 +108,30 @@ const createWindow = () => {
     const newOptions = { ...lastOptions, quality: 'default' };
     return startDownload(mainWindow, lastUrl, newOptions);
   });
+
+  // Handle browse folder dialog
+  ipcMain.handle('browse-folder', async () => {
+    const result = await dialog.showOpenDialog({
+      properties: ['openDirectory'],
+      title: 'Välj mapp för att spara nedladdade filer'
+    });
+    
+    if (!result.canceled && result.filePaths.length > 0) {
+      return result.filePaths[0];
+    }
+    return null;
+  });
+
+  // Get default save path (Downloads folder or home directory)
+  ipcMain.handle('get-default-save-path', () => {
+    try {
+      const downloadsPath = path.join(os.homedir(), 'Downloads');
+      return downloadsPath;
+    } catch (error) {
+      console.error('Error getting default save path:', error);
+      return os.homedir();
+    }
+  });
 };
 
 // Function to get the path to the svtplay-dl executable
@@ -124,7 +152,7 @@ function startDownload(mainWindow, url, options) {
   return new Promise((resolve, reject) => {
     try {
       // Get the user's Videos directory
-      const videosDir = path.join(os.homedir(), 'Videos', 'SVTPlayDownloader');
+      const videosDir = options.savePath || path.join(os.homedir(), 'Videos', 'SVTPlayDownloader');
       
       // Create the directory if it doesn't exist
       if (!fs.existsSync(videosDir)) {

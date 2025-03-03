@@ -41,6 +41,15 @@
         </select>
       </div>
       
+      <!-- Add after the quality selection dropdown and before the button-group div -->
+      <div class="save-location">
+        <label for="savePathInput">Spara filer till:</label>
+        <div class="save-path-container">
+          <input type="text" id="savePathInput" placeholder="Standard plats" readonly />
+          <button id="browseFolderBtn">Bläddra...</button>
+        </div>
+      </div>
+      
       <div class="button-group">
         <button id="downloadBtn">Ladda ner</button>
         <button id="stopBtn" disabled>Stopp</button>
@@ -79,7 +88,6 @@
     </div>
   </body>
   <script>
-    // Add this before your DOMContentLoaded event
     console.log('Script running, checking API availability:', !!window.api);
     
     document.addEventListener('DOMContentLoaded', () => {
@@ -112,6 +120,31 @@
       const tryHighestQualityBtn = document.getElementById('tryHighestQualityBtn');
       const cancelDownloadBtn = document.getElementById('cancelDownloadBtn');
 
+      // Add these lines after you define the other DOM elements
+      const savePathInput = document.getElementById('savePathInput');
+      const browseFolderBtn = document.getElementById('browseFolderBtn');
+
+      // Get default save path when app loads
+      window.api.getDefaultSavePath().then(path => {
+        savePathInput.placeholder = path || 'Standard plats';
+        // Store the default path even if the input is showing the placeholder
+        savePathInput.setAttribute('data-default-path', path || '');
+      });
+
+      // Handle browse button click
+      browseFolderBtn.addEventListener('click', async () => {
+        try {
+          const selectedPath = await window.api.browseFolder();
+          if (selectedPath) {
+            savePathInput.value = selectedPath;
+            // Clear the placeholder since we have a value now
+            savePathInput.placeholder = '';
+          }
+        } catch (error) {
+          console.error('Error selecting folder:', error);
+        }
+      });
+
       // Handle download button click
       downloadBtn.addEventListener('click', async () => {
         const url = videoUrlInput.value.trim();
@@ -126,7 +159,8 @@
         const options = {
           subtitles: subtitlesCheckbox.checked,
           wholeSeries: wholeSeriesCheckbox.checked,
-          quality: qualitySelect.value // Add the selected quality
+          quality: qualitySelect.value,
+          savePath: savePathInput.value || savePathInput.getAttribute('data-default-path') // Add the selected save path
         };
         
         // Update UI

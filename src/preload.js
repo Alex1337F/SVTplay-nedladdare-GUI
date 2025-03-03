@@ -37,5 +37,15 @@ contextBridge.exposeInMainWorld('api', {
   // Function to retry download with highest quality
   retryWithHighestQuality: () => {
     return ipcRenderer.invoke('retry-highest-quality');
+  },
+  
+  // Function to browse for folder (new)
+  browseFolder: () => {
+    return ipcRenderer.invoke('browse-folder');
+  },
+  
+  // Function to get default save path (new)
+  getDefaultSavePath: () => {
+    return ipcRenderer.invoke('get-default-save-path');
   }
 });
